@@ -1,0 +1,17 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Cache do Python / pytest
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+
+# Cobertura
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
