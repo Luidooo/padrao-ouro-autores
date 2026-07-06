@@ -14,8 +14,8 @@ class Caso2SobrenomeIniciais:
         tokens = colapsar_espacos(nome).split()
         return [t for t in tokens if self._normalizar(t) not in _PARTICULAS]
 
-    def _assinatura(self, nome: str) -> tuple[str, tuple[str, ...]]:
-        significativos = self._significativos(nome)
+    # ---> MÉTODO EXTRAÍDO AQUI <---
+    def _separar_nome_sobrenome(self, significativos: list[str]) -> tuple[str, list[str]]:
         iniciais = [t for t in significativos if self._eh_inicial(t)]
         por_extenso = [t for t in significativos if not self._eh_inicial(t)]
 
@@ -25,6 +25,15 @@ class Caso2SobrenomeIniciais:
         else:
             sobrenome = significativos[-1]
             nomes = significativos[:-1]
+            
+        return sobrenome, nomes
+    # ------------------------------
+
+    def _assinatura(self, nome: str) -> tuple[str, tuple[str, ...]]:
+        significativos = self._significativos(nome)
+        
+        # Uso do método extraído
+        sobrenome, nomes = self._separar_nome_sobrenome(significativos)
 
         return self._normalizar(sobrenome), tuple(self._normalizar(n)[0] for n in nomes)
 
