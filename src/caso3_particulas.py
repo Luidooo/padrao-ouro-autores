@@ -2,6 +2,21 @@ from normalizacao import colapsar_espacos, remover_acentos
 
 _PARTICULAS = {"de", "da", "do", "dos", "das", "e"}
 
+# ---> CLASSE OBJETO-MÉTODO EXTRAÍDA AQUI <---
+class AvaliadorEquivalencia:
+    def __init__(self, caso_instancia, nome_a: str, nome_b: str):
+        self.caso = caso_instancia
+        self.nome_a = nome_a
+        self.nome_b = nome_b
+
+    def computar(self) -> bool:
+        sig_a = self.caso._significativos(self.nome_a)
+        sig_b = self.caso._significativos(self.nome_b)
+        if len(sig_a) != len(sig_b):
+            return False
+        return all(self.caso._tokens_combinam(a, b) for a, b in zip(sig_a, sig_b))
+# --------------------------------------------
+
 
 class Caso3Particulas:
     def _normalizar(self, token: str) -> str:
@@ -21,11 +36,9 @@ class Caso3Particulas:
         return na == nb
 
     def sao_equivalentes(self, nome_a: str, nome_b: str) -> bool:
-        sig_a = self._significativos(nome_a)
-        sig_b = self._significativos(nome_b)
-        if len(sig_a) != len(sig_b):
-            return False
-        return all(self._tokens_combinam(a, b) for a, b in zip(sig_a, sig_b))
+        # Uso do Objeto-Método
+        avaliador = AvaliadorEquivalencia(self, nome_a, nome_b)
+        return avaliador.computar()
 
     def _qtd_por_extenso(self, nome: str) -> int:
         return sum(1 for t in self._significativos(nome) if not self._eh_inicial(t))
